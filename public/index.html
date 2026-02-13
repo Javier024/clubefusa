@@ -3,39 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EFUSA - Escuela de Fútbol</title>
+    <title>EFUSA - Panel de Control</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Estilos personalizados */
-        .sidebar {
-            transition: all 0.3s ease;
+        .sidebar-transition {
+            transition: margin-left 0.3s ease-in-out;
         }
-        .sidebar.collapsed {
-            width: 80px;
-        }
-        .sidebar.collapsed .sidebar-text {
-            display: none;
-        }
-        .content {
-            transition: all 0.3s ease;
-        }
-        .notification {
-            animation: slideIn 0.3s ease;
-        }
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+        .sidebar-collapsed {
+            margin-left: 80px !important;
         }
         .loading-spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #3498db;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
             border-radius: 50%;
             width: 40px;
             height: 40px;
@@ -49,84 +29,84 @@
 </head>
 <body class="bg-gray-100">
     <!-- Sidebar -->
-    <div id="sidebar" class="sidebar fixed left-0 top-0 h-full w-64 bg-blue-900 text-white z-40">
-        <div class="p-4">
-            <div class="flex items-center justify-between mb-8">
-                <h1 class="text-2xl font-bold sidebar-text">EFUSA</h1>
+    <aside id="sidebar" class="fixed left-0 top-0 h-full w-64 bg-blue-900 text-white z-20 flex flex-col transition-all duration-300">
+        <div class="p-4 border-b border-blue-800">
+            <div class="flex items-center justify-between">
+                <h1 class="text-xl font-bold">EFUSA</h1>
                 <button onclick="toggleSidebar()" class="lg:hidden">
-                    <i class="fas fa-bars"></i>
+                    <i class="fas fa-times"></i>
                 </button>
             </div>
-            
-            <nav class="space-y-2">
-                <a href="dashboard.html" class="flex items-center p-3 rounded hover:bg-blue-800 transition">
-                    <i class="fas fa-tachometer-alt w-6"></i>
-                    <span class="ml-3 sidebar-text">Dashboard</span>
-                </a>
-                <a href="jugadores.html" class="flex items-center p-3 rounded hover:bg-blue-800 transition">
-                    <i class="fas fa-users w-6"></i>
-                    <span class="ml-3 sidebar-text">Jugadores</span>
-                </a>
-                <a href="pagos.html" class="flex items-center p-3 rounded hover:bg-blue-800 transition">
-                    <i class="fas fa-dollar-sign w-6"></i>
-                    <span class="ml-3 sidebar-text">Pagos</span>
-                </a>
-                <a href="historial.html" class="flex items-center p-3 rounded hover:bg-blue-800 transition">
-                    <i class="fas fa-history w-6"></i>
-                    <span class="ml-3 sidebar-text">Historial</span>
-                </a>
-                <a href="reportes.html" class="flex items-center p-3 rounded hover:bg-blue-800 transition">
-                    <i class="fas fa-file-excel w-6"></i>
-                    <span class="ml-3 sidebar-text">Reportes</span>
-                </a>
-                <a href="alertas.html" class="flex items-center p-3 rounded hover:bg-blue-800 transition">
-                    <i class="fas fa-exclamation-triangle w-6"></i>
-                    <span class="ml-3 sidebar-text">Alertas</span>
-                </a>
-            </nav>
         </div>
         
-        <div class="absolute bottom-0 w-full p-4">
-            <button onclick="logout()" class="w-full flex items-center p-3 rounded hover:bg-blue-800 transition">
-                <i class="fas fa-sign-out-alt w-6"></i>
-                <span class="ml-3 sidebar-text">Cerrar Sesión</span>
-            </button>
+        <nav class="flex-1 p-4">
+            <ul class="space-y-2">
+                <li>
+                    <a href="index.html" class="flex items-center space-x-3 p-3 rounded-lg bg-blue-800 text-white">
+                        <i class="fas fa-tachometer-alt w-5"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="jugadores.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-800 transition">
+                        <i class="fas fa-users w-5"></i>
+                        <span>Jugadores</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="pagos.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-800 transition">
+                        <i class="fas fa-dollar-sign w-5"></i>
+                        <span>Pagos</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="categorias.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-800 transition">
+                        <i class="fas fa-tags w-5"></i>
+                        <span>Categorías</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="reportes.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-800 transition">
+                        <i class="fas fa-chart-bar w-5"></i>
+                        <span>Reportes</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        
+        <div class="p-4 border-t border-blue-800">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-blue-700 rounded-full flex items-center justify-center">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>
+                    <p class="text-sm font-medium">Administrador</p>
+                    <p class="text-xs text-blue-300">admin@efusa.com</p>
+                </div>
+            </div>
         </div>
-    </div>
+    </aside>
     
     <!-- Main Content -->
-    <div id="content" class="content ml-64 min-h-screen">
+    <div id="content" class="sidebar-transition" style="margin-left: 256px;">
         <!-- Header -->
-        <header class="bg-white shadow-sm">
-            <div class="px-6 py-4 flex justify-between items-center">
-                <button onclick="toggleSidebar()" class="lg:hidden">
-                    <i class="fas fa-bars text-gray-600"></i>
+        <header class="bg-white shadow-sm sticky top-0 z-10">
+            <div class="flex items-center justify-between p-4">
+                <button onclick="toggleSidebar()" class="text-gray-600 hover:text-gray-900 focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
                 </button>
-                <div class="flex items-center space-x-4">
-                    <div class="relative">
-                        <input type="text" placeholder="Buscar..." class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500">
-                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-                    </div>
-                    <div class="relative">
-                        <button class="relative p-2">
-                            <i class="fas fa-bell text-gray-600"></i>
-                            <span class="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
-                        </button>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <img src="https://picsum.photos/seed/user/40/40.jpg" alt="Usuario" class="w-10 h-10 rounded-full">
-                        <div>
-                            <p class="text-sm font-semibold">Administrador</p>
-                            <p class="text-xs text-gray-500">admin@efusa.com</p>
-                        </div>
-                    </div>
-                </div>
+                
+                <h2 class="text-xl font-semibold text-gray-800">Panel de Control</h2>
+                
+                <!-- Espacio vacío donde estaba el menú de usuario -->
+                <div></div>
             </div>
         </header>
         
-        <!-- Page Content -->
+        <!-- Main Content Area -->
         <main class="p-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 <div class="bg-white rounded-lg shadow p-6">
                     <div class="flex items-center justify-between">
                         <div>
@@ -232,7 +212,7 @@
     <script src="js/api.js"></script>
     <script src="js/dashboard.js"></script>
     <script>
-        // Funciones globales
+        // Función global para toggle sidebar
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const content = document.getElementById('content');
@@ -244,22 +224,6 @@
                 content.style.marginLeft = '256px';
             }
         }
-        
-        function logout() {
-            if (confirm('¿Estás seguro de cerrar sesión?')) {
-                localStorage.removeItem('isLoggedIn');
-                localStorage.removeItem('user');
-                window.location.href = 'login.html';
-            }
-        }
-        
-        // Verificar autenticación
-        document.addEventListener('DOMContentLoaded', () => {
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
-            if (!isLoggedIn) {
-                window.location.href = 'login.html';
-            }
-        });
     </script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 // js/utils.js
-// Funciones de utilidad
+// Funciones de utilidad (SIN VERIFICACIÓN DE LOGIN)
 
 // Formatear fecha
 function formatDate(dateString) {
