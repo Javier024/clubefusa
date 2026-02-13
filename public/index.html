@@ -1,125 +1,265 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>EFUSA | Dashboard</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EFUSA - Escuela de Fútbol</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Estilos personalizados */
+        .sidebar {
+            transition: all 0.3s ease;
+        }
+        .sidebar.collapsed {
+            width: 80px;
+        }
+        .sidebar.collapsed .sidebar-text {
+            display: none;
+        }
+        .content {
+            transition: all 0.3s ease;
+        }
+        .notification {
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body class="bg-gray-100">
-
-<script>
-if (localStorage.getItem("auth") !== "true") {
-  location.href = "login.html";
-}
-</script>
-
-<!-- Barra de navegación -->
-<nav class="bg-green-700 text-white p-4 shadow-lg">
-  <div class="container mx-auto flex justify-between items-center">
-    <h1 class="text-xl font-bold flex items-center">
-      <i class="fas fa-futbol mr-2"></i> EFUSA - Dashboard
-    </h1>
-    <div class="flex items-center space-x-4">
-      <span class="text-sm">Admin</span>
-      <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-sm">
-        <i class="fas fa-sign-out-alt mr-1"></i> Cerrar sesión
-      </button>
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar fixed left-0 top-0 h-full w-64 bg-blue-900 text-white z-40">
+        <div class="p-4">
+            <div class="flex items-center justify-between mb-8">
+                <h1 class="text-2xl font-bold sidebar-text">EFUSA</h1>
+                <button onclick="toggleSidebar()" class="lg:hidden">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            
+            <nav class="space-y-2">
+                <a href="dashboard.html" class="flex items-center p-3 rounded hover:bg-blue-800 transition">
+                    <i class="fas fa-tachometer-alt w-6"></i>
+                    <span class="ml-3 sidebar-text">Dashboard</span>
+                </a>
+                <a href="jugadores.html" class="flex items-center p-3 rounded hover:bg-blue-800 transition">
+                    <i class="fas fa-users w-6"></i>
+                    <span class="ml-3 sidebar-text">Jugadores</span>
+                </a>
+                <a href="pagos.html" class="flex items-center p-3 rounded hover:bg-blue-800 transition">
+                    <i class="fas fa-dollar-sign w-6"></i>
+                    <span class="ml-3 sidebar-text">Pagos</span>
+                </a>
+                <a href="historial.html" class="flex items-center p-3 rounded hover:bg-blue-800 transition">
+                    <i class="fas fa-history w-6"></i>
+                    <span class="ml-3 sidebar-text">Historial</span>
+                </a>
+                <a href="reportes.html" class="flex items-center p-3 rounded hover:bg-blue-800 transition">
+                    <i class="fas fa-file-excel w-6"></i>
+                    <span class="ml-3 sidebar-text">Reportes</span>
+                </a>
+                <a href="alertas.html" class="flex items-center p-3 rounded hover:bg-blue-800 transition">
+                    <i class="fas fa-exclamation-triangle w-6"></i>
+                    <span class="ml-3 sidebar-text">Alertas</span>
+                </a>
+            </nav>
+        </div>
+        
+        <div class="absolute bottom-0 w-full p-4">
+            <button onclick="logout()" class="w-full flex items-center p-3 rounded hover:bg-blue-800 transition">
+                <i class="fas fa-sign-out-alt w-6"></i>
+                <span class="ml-3 sidebar-text">Cerrar Sesión</span>
+            </button>
+        </div>
     </div>
-  </div>
-</nav>
-
-<!-- Menú de navegación -->
-<div class="bg-green-600 text-white p-2">
-  <div class="container mx-auto flex space-x-2">
-    <a href="index.html" class="px-3 py-2 rounded bg-green-700 hover:bg-green-800 transition">
-      <i class="fas fa-home mr-1"></i> Dashboard
-    </a>
-    <a href="jugadores.html" class="px-3 py-2 rounded hover:bg-green-700 transition">
-      <i class="fas fa-users mr-1"></i> Jugadores
-    </a>
-    <a href="pagos.html" class="px-3 py-2 rounded hover:bg-green-700 transition">
-      <i class="fas fa-money-bill-wave mr-1"></i> Pagos
-    </a>
-    <a href="alertas.html" class="px-3 py-2 rounded hover:bg-green-700 transition">
-      <i class="fas fa-exclamation-triangle mr-1"></i> Alertas
-    </a>
-    <a href="historial.html" class="px-3 py-2 rounded hover:bg-green-700 transition">
-      <i class="fas fa-history mr-1"></i> Historial
-    </a>
-    <a href="reportes.html" class="px-3 py-2 rounded hover:bg-green-700 transition">
-      <i class="fas fa-file-alt mr-1"></i> Reportes
-    </a>
-  </div>
-</div>
-
-<main class="container mx-auto p-6">
-
-<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-  <div class="bg-white p-6 rounded shadow-lg transform hover:scale-105 transition">
-    <div class="flex items-center justify-between">
-      <div>
-        <p class="text-gray-500 text-sm">Jugadores</p>
-        <p class="text-2xl font-bold" id="totalJugadores">0</p>
-      </div>
-      <div class="bg-blue-100 p-3 rounded-full">
-        <i class="fas fa-users text-blue-600 text-xl"></i>
-      </div>
+    
+    <!-- Main Content -->
+    <div id="content" class="content ml-64 min-h-screen">
+        <!-- Header -->
+        <header class="bg-white shadow-sm">
+            <div class="px-6 py-4 flex justify-between items-center">
+                <button onclick="toggleSidebar()" class="lg:hidden">
+                    <i class="fas fa-bars text-gray-600"></i>
+                </button>
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <input type="text" placeholder="Buscar..." class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                    <div class="relative">
+                        <button class="relative p-2">
+                            <i class="fas fa-bell text-gray-600"></i>
+                            <span class="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                        </button>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <img src="https://picsum.photos/seed/user/40/40.jpg" alt="Usuario" class="w-10 h-10 rounded-full">
+                        <div>
+                            <p class="text-sm font-semibold">Administrador</p>
+                            <p class="text-xs text-gray-500">admin@efusa.com</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Page Content -->
+        <main class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-500">Total Jugadores</p>
+                            <p class="text-2xl font-bold" id="totalJugadores">0</p>
+                        </div>
+                        <div class="bg-blue-100 p-3 rounded-full">
+                            <i class="fas fa-users text-blue-600"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-500">Pagos del Mes</p>
+                            <p class="text-2xl font-bold" id="pagosMes">0</p>
+                        </div>
+                        <div class="bg-green-100 p-3 rounded-full">
+                            <i class="fas fa-dollar-sign text-green-600"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-500">Ingresos Mensuales</p>
+                            <p class="text-2xl font-bold" id="ingresos">$0</p>
+                        </div>
+                        <div class="bg-purple-100 p-3 rounded-full">
+                            <i class="fas fa-chart-line text-purple-600"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-500">Jugadores Deudores</p>
+                            <p class="text-2xl font-bold text-red-600" id="deudores">0</p>
+                        </div>
+                        <div class="bg-red-100 p-3 rounded-full">
+                            <i class="fas fa-exclamation-triangle text-red-600"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Activities -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-lg font-semibold mb-4">Actividades Recientes</h2>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-3 hover:bg-gray-50 rounded">
+                        <div class="flex items-center space-x-3">
+                            <div class="bg-blue-100 p-2 rounded-full">
+                                <i class="fas fa-user-plus text-blue-600 text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium">Nuevo jugador registrado</p>
+                                <p class="text-xs text-gray-500">Juan Pérez - Sub 14-13</p>
+                            </div>
+                        </div>
+                        <span class="text-xs text-gray-500">Hace 2 horas</span>
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-3 hover:bg-gray-50 rounded">
+                        <div class="flex items-center space-x-3">
+                            <div class="bg-green-100 p-2 rounded-full">
+                                <i class="fas fa-money-bill text-green-600 text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium">Pago registrado</p>
+                                <p class="text-xs text-gray-500">María García - $50,000</p>
+                            </div>
+                        </div>
+                        <span class="text-xs text-gray-500">Hace 5 horas</span>
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-3 hover:bg-gray-50 rounded">
+                        <div class="flex items-center space-x-3">
+                            <div class="bg-yellow-100 p-2 rounded-full">
+                                <i class="fas fa-exclamation text-yellow-600 text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium">Pago pendiente</p>
+                                <p class="text-xs text-gray-500">Carlos Rodríguez - 2 meses</p>
+                            </div>
+                        </div>
+                        <span class="text-xs text-gray-500">Ayer</span>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
-  </div>
-  
-  <div class="bg-white p-6 rounded shadow-lg transform hover:scale-105 transition">
-    <div class="flex items-center justify-between">
-      <div>
-        <p class="text-gray-500 text-sm">Total Pagos</p>
-        <p class="text-2xl font-bold" id="totalPagos">$0</p>
-      </div>
-      <div class="bg-green-100 p-3 rounded-full">
-        <i class="fas fa-money-bill-wave text-green-600 text-xl"></i>
-      </div>
-    </div>
-  </div>
-  
-  <div class="bg-white p-6 rounded shadow-lg transform hover:scale-105 transition">
-    <div class="flex items-center justify-between">
-      <div>
-        <p class="text-gray-500 text-sm">Deudores</p>
-        <p class="text-2xl font-bold" id="deudores">0</p>
-      </div>
-      <div class="bg-red-100 p-3 rounded-full">
-        <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="bg-white p-6 rounded shadow-lg">
-  <h2 class="text-xl font-bold mb-4">Acciones Rápidas</h2>
-  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-    <a href="jugadores.html" class="bg-blue-500 text-white p-4 rounded-lg text-center hover:bg-blue-600 transition">
-      <i class="fas fa-user-plus text-2xl mb-2"></i>
-      <p>Nuevo Jugador</p>
-    </a>
-    <a href="pagos.html" class="bg-green-500 text-white p-4 rounded-lg text-center hover:bg-green-600 transition">
-      <i class="fas fa-plus-circle text-2xl mb-2"></i>
-      <p>Registrar Pago</p>
-    </a>
-    <a href="alertas.html" class="bg-orange-500 text-white p-4 rounded-lg text-center hover:bg-orange-600 transition">
-      <i class="fas fa-bell text-2xl mb-2"></i>
-      <p>Ver Alertas</p>
-    </a>
-    <a href="reportes.html" class="bg-purple-500 text-white p-4 rounded-lg text-center hover:bg-purple-600 transition">
-      <i class="fas fa-chart-bar text-2xl mb-2"></i>
-      <p>Generar Reporte</p>
-    </a>
-  </div>
-</div>
-
-</main>
-
-<!-- Scripts -->
-<script src="js/api.js"></script>
-<script src="js/utils.js"></script>
-<script src="js/dashboard.js"></script>
+    
+    <!-- Notification Container -->
+    <div id="notificationContainer" class="fixed top-4 right-4 z-50"></div>
+    
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script>
+        // Funciones globales
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const content = document.getElementById('content');
+            sidebar.classList.toggle('collapsed');
+            
+            if (sidebar.classList.contains('collapsed')) {
+                content.style.marginLeft = '80px';
+            } else {
+                content.style.marginLeft = '256px';
+            }
+        }
+        
+        function logout() {
+            if (confirm('¿Estás seguro de cerrar sesión?')) {
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('user');
+                window.location.href = 'login.html';
+            }
+        }
+        
+        // Verificar autenticación
+        document.addEventListener('DOMContentLoaded', () => {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (!isLoggedIn) {
+                window.location.href = 'login.html';
+            }
+        });
+    </script>
 </body>
 </html>

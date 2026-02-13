@@ -1,39 +1,41 @@
 // js/dashboard.js
 document.addEventListener('DOMContentLoaded', async () => {
-  await loadDashboardData();
+    await loadDashboardData();
 });
 
 async function loadDashboardData() {
-  try {
-    // Cargar jugadores
-    const jugadores = await api.getJugadores();
-    document.getElementById('totalJugadores').textContent = jugadores.length;
-    
-    // Cargar pagos
-    const pagos = await api.getPagos();
-    const totalPagos = pagos.reduce((sum, pago) => {
-      const monto = parseFloat(pago.monto) || 0;
-      return sum + monto;
-    }, 0);
-    document.getElementById('totalPagos').textContent = formatCurrency(totalPagos);
-    
-    // Calcular deudores
-    const deudores = jugadores.filter(jugador => {
-      const ultimoPago = pagos.find(pago => pago.jugador_id === jugador.id);
-      if (!ultimoPago) return true;
-      
-      const fechaPago = new Date(ultimoPago.fecha_pago);
-      const hoy = new Date();
-      const mesesDiferencia = (hoy.getFullYear() - fechaPago.getFullYear()) * 12 + 
-                             (hoy.getMonth() - fechaPago.getMonth());
-      
-      return mesesDiferencia > 1;
-    });
-    
-    document.getElementById('deudores').textContent = deudores.length;
-    
-  } catch (error) {
-    console.error('Error loading dashboard data:', error);
-    showNotification('Error al cargar los datos del dashboard', 'error');
-  }
+    try {
+        const stats = await api.getEstadisticas();
+        
+        // Actualizar contadores
+        document.getElementById('totalJugadores').textContent = stats.totalJugadores;
+        document.getElementById('pagosMes').textContent = stats.pagosMes;
+        document.getElementById('ingresos').textContent = formatCurrency(stats.ingresosMes);
+        
+        // Calcular deudores
+        const jugadores = await api.getJugadores();
+        const pagos = await api.getPagos();
+        
+        const deudores = jugadores.filter(jugador => {
+            const pagosJugador = pagos.filter(p => p.jugador_id === jugador.id);
+            if (pagosJugador.length === 0) return true;
+            
+            const ultimoPago = pagosJugador.sort((a, b) => 
+                new Date(b.fecha_pago) - new Date(a.fecha_pago)
+            )[0];
+            
+            const fechaPago = new Date(ultimoPago.fecha_pago);
+            const hoy = new Date();
+            const mesesDiferencia = (hoy.getFullYear() - fechaPago.getFullYear()) * 12 + 
+                                   (hoy.getMonth() - fechaPago.getMonth());
+            
+            return mesesDiferencia > 1;
+        });
+        
+        document.getElementById('deudores').textContent = deudores.length;
+        
+    } catch (error) {
+        console.error('Error loading dashboard data:', error);
+        showNotification('Error al cargar los datos del dashboard', 'error');
+    }
 }
